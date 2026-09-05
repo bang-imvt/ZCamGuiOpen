@@ -1,0 +1,4 @@
+#!/bin/sh
+# Blocks a commit if any staged file is outside the public-repo publish boundary.
+# Installed into .git/hooks by `npm run prepare` (see scripts/install-git-hooks.cjs).
+node "$(git rev-parse --show-toplevel)/scripts/check-publish-boundary.cjs"

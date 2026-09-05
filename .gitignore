@@ -1,0 +1,15 @@
+node_modules/
+dist/
+*.log
+
+# Local probe / debug artifacts (never publish)
+.h2probe.cjs
+*.min.js.tmp
+.mjpeg-probe-profile/
+.zcode/
+.vscode/
+
+# Private local reference material — firmware web UI and internal docs.
+# Never publish: copyrighted camera firmware code and internal notes.
+js/
+doc/
