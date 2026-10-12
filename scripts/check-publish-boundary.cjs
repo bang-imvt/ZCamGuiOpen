@@ -5,7 +5,7 @@ const { execSync } = require('node:child_process');
 // these is outside the public-repository publish boundary (copyrighted firmware
 // under js/, internal notes under doc/, generated dist/, probe artifacts, …) and
 // must never be committed.
-const IGNORED_DIRS = ['node_modules', 'dist', 'js', 'doc', '.zcode', '.vscode', '.mjpeg-probe-profile'];
+const IGNORED_DIRS = ['node_modules', 'dist', 'app', 'js', 'doc', '.zcode', '.vscode', '.mjpeg-probe-profile'];
 const IGNORED_FILES = [/\.min\.js\.tmp$/, /\.h2probe\.cjs$/, /\.log$/];
 
 function isExcluded(relPath) {

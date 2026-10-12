@@ -2,8 +2,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const source = path.join(__dirname, '..', 'src', 'renderer');
-const compiled = path.join(__dirname, '..', 'dist', 'renderer');
-const target = path.join(__dirname, '..', 'dist', 'renderer');
+const compiled = path.join(__dirname, '..', 'app', 'renderer');
+const target = path.join(__dirname, '..', 'app', 'renderer');
 
 fs.mkdirSync(target, { recursive: true });
 for (const file of ['index.html', 'styles.css']) {

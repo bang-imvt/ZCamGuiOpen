@@ -1,15 +1,16 @@
 {
   "name": "zcamera-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple local Electron client for ZCamera cameras",
+  "author": "bang.fu",
   "license": "MIT",
-  "main": "dist/main.js",
+  "main": "app/main.js",
   "engines": {
     "node": ">=18"
   },
   "files": [
     "src",
-    "dist",
+    "app",
     "LICENSE",
     "README.md"
   ],
@@ -17,10 +18,14 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc && tsc -p tsconfig.renderer.json && node scripts/copy-static.cjs",
+    "clean": "node -e \"for (const d of ['dist','app']) require('node:fs').rmSync(d,{recursive:true,force:true})\"",
+    "build": "npm run clean && tsc && tsc -p tsconfig.renderer.json && node scripts/copy-static.cjs",
     "start": "npm run build && electron .",
     "typecheck": "tsc --noEmit",
     "check:publish": "node scripts/check-publish-boundary.cjs",
+    "dist": "npm run build && electron-builder --publish never",
+    "dist:win": "npm run build && electron-builder --win --publish never",
+    "dist:mac": "npm run build && electron-builder --mac --publish never",
     "prepare": "node scripts/install-git-hooks.cjs"
   },
   "dependencies": {
@@ -31,6 +36,38 @@
     "@types/node": "^22.10.0",
     "@types/ws": "^8.5.13",
     "electron": "^36.0.0",
+    "electron-builder": "^26.15.3",
     "typescript": "^5.7.2"
+  },
+  "build": {
+    "appId": "com.imvt.zcamera-client",
+    "productName": "ZCamGuiOpen",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "app/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ],
+      "artifactName": "${productName}-${version}-win-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.photography",
+      "artifactName": "${productName}-${version}-mac-${arch}.${ext}"
+    }
   }
 }

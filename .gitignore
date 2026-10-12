@@ -1,5 +1,6 @@
 node_modules/
 dist/
+app/
 *.log
 
 # Local probe / debug artifacts (never publish)

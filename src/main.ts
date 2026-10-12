@@ -8,7 +8,7 @@ import { CameraCandidate, CameraCredentials } from './shared/types';
 import { GalleryService } from './main/gallery-service';
 
 // Startup stamp so a stale build/process is instantly recognizable in the
-// console (compare with the LastWriteTime of dist/main.js).
+// console (compare with the LastWriteTime of app/main.js).
 console.log(`[main] build stamp ${__dirname} ${new Date().toISOString()}`);
 
 let mainWindow: BrowserWindow | undefined;

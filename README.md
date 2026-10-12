@@ -37,10 +37,36 @@ This is an independent community tool, not affiliated with or endorsed by Z CAM.
 
 ```bash
 npm install
-npm run build   # compiles main + renderer and assembles dist/
+npm run build   # compiles main + renderer into app/
 npm start       # build + launch Electron
 npm run typecheck
 ```
+
+## Packaging installers
+
+`npm run dist:win` compiles the app into `app/`, then emits the Windows deliverables into
+`dist/`:
+
+| File | What it is |
+|------|------------|
+| `dist/ZCamGuiOpen-Setup-<version>.exe` | NSIS installer (lets the tester choose the install folder) |
+| `dist/ZCamGuiOpen-<version>-win-<arch>.zip` | Portable build — unzip and run, no install |
+
+```bash
+npm run dist:win   # Windows installer + portable zip  → dist/
+npm run dist:mac   # macOS dmg + zip — must run ON macOS; cannot cross-build from Windows
+npm run dist       # host platform's default targets
+```
+
+Notes:
+
+- Compiled output lives in `app/` and `dist/` holds **only** deliverables. These must stay
+  separate: electron-builder automatically excludes its own output directory (`dist/`) from
+  the packaged app, so a payload placed under `dist/` would be silently dropped.
+- Builds are **unsigned** (no code-signing certificate). Windows shows a SmartScreen
+  "unknown publisher" prompt; on macOS the tester must right-click → Open the first time.
+- No custom app icon is configured yet, so the default Electron icon is used.
+- macOS artifacts cannot be produced from Windows — run `npm run dist:mac` on a Mac.
 
 ## Project structure
 
@@ -48,9 +74,11 @@ npm run typecheck
 |------|---------|
 | `src/main.ts` | Electron main process: window, IPC surface, certificate handling, MJPEG/WebRTC proxies |
 | `src/camera/` | Camera communication: HTTP transport (Digest auth, origin negotiation), WebSocket notifications, per-camera state store, settings engine, stream control, browser login fallback |
-| `src/main/` | Orchestration: camera manager (multi-camera sessions), mDNS discovery, per-host TLS trust |
+| `src/main/` | Orchestration: camera manager (multi-camera sessions), mDNS discovery, per-host TLS trust, gallery service |
 | `src/renderer/` | UI (no framework): discovery, live view, settings |
-| `src/shared/` | Settings schema shared by main and renderer |
+| `src/shared/` | Settings and gallery types shared by main and renderer |
+| `app/` | Generated compiled output (git-ignored) — this is what gets packaged |
+| `dist/` | Generated deliverables: installer + portable zip (git-ignored) |
 | `scripts/copy-static.cjs` | Assembles the classic-script renderer bundle at build time |
 | `scripts/check-publish-boundary.cjs` | Fails if any tracked file is outside the public publish boundary |
 | `githooks/` | Committed pre-commit hook enforcing the publish boundary |
@@ -58,7 +86,7 @@ npm run typecheck
 ## Publishing
 
 This repository is public. The publish boundary is **only `src/`, build metadata, `LICENSE`,
-and `README.md`** — everything else (`js/`, `doc/`, generated `dist/`, and probe/AI artifacts)
+and `README.md`** — everything else (`js/`, `doc/`, generated `app/` and `dist/`, and probe/AI artifacts)
 is git-ignored and must never be committed. Two layers enforce this:
 
 - `.gitignore` keeps the excluded material out of `git status`.
